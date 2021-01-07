@@ -73,6 +73,8 @@ class MyUARTCallbacks: public BLECharacteristicCallbacks {
 
         Serial.println();
         Serial.println("*********");
+        tb_display_clear();
+        tb_display_show();
         tb_display_print_String(rxValue.c_str());
       }
     }
@@ -127,8 +129,9 @@ void initBLE() {
   pBattery->start();
   
   // Start advertising
-  pServer->getAdvertising()->start();  
-  
+  BLEAdvertising* advertising = pServer->getAdvertising();
+  advertising->addServiceUUID(UART_SERVICE_UUID);
+  advertising->start();
 }
 
 void setup() {
@@ -137,7 +140,7 @@ void setup() {
   M5.Axp.ScreenBreath(10);
   Serial.begin(115200);
 
-  tb_display_init(1, 3);
+  tb_display_init(3, 3);
   tb_display_word_wrap = false;
 
   initBLE();
